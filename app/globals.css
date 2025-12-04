@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-paper: #fdfcfb;
+  --ink: #111827;
+  --ink-soft: #4b5563;
+  --ink-light: #9ca3af;
+  --jade: #8dd3c7;
+  --jade-soft: #c4f1e0;
+}
+
+body {
+  @apply text-ink antialiased;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(191, 219, 254, 0.45), transparent 55%),
+    radial-gradient(circle at 100% 100%, rgba(209, 250, 229, 0.45), transparent 55%),
+    #fdfcfb;
+}
+
+.ink-card {
+  @apply rounded-card border border-white/80 bg-white/80 shadow-card backdrop-blur;
+}
+
+.ink-section-title {
+  @apply text-sm font-medium tracking-[0.2em] text-ink-light;
+}
+
+.ink-gradient-text {
+  background: linear-gradient(to right, #0369a1, #0f766e, #22c55e);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.ink-bg {
+  background-image:
+    radial-gradient(circle at 0% 0%, rgba(191, 219, 254, 0.4), transparent 55%),
+    radial-gradient(circle at 100% 100%, rgba(209, 250, 229, 0.3), transparent 55%);
+}
+
+
