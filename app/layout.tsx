@@ -4,7 +4,8 @@ import BottomNav from "@/components/BottomNav";
 
 export const metadata: Metadata = {
   title: "五行 × 体质 · 日常助手",
-  description: "极简水墨风 · 五行人格 × 中医体质 × 天气每日建议"
+  description: "极简水墨风 · 五行人格 × 中医体质 × 天气每日建议",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=5"
 };
 
 export default function RootLayout({

@@ -153,22 +153,69 @@ export async function POST(req: NextRequest) {
 
     // 优先 DeepSeek，其次 OpenAI，最后 Gemini
     let text: string | null = null;
-    let lastError: unknown = null;
+    const errors: string[] = [];
+    const hasApiKey = {
+      deepseek: !!process.env.DEEPSEEK_API_KEY,
+      openai: !!process.env.OPENAI_API_KEY,
+      gemini: !!process.env.GEMINI_API_KEY
+    };
 
-    for (const caller of [callDeepSeek, callOpenAI, callGemini]) {
+    // 尝试调用各个 API
+    if (hasApiKey.deepseek) {
       try {
-        text = await caller(prompt);
-        if (text) break;
-      } catch (err) {
-        lastError = err;
+        text = await callDeepSeek(prompt);
+        if (text) {
+          // 成功，直接返回
+        }
+      } catch (err: any) {
+        const errMsg = err?.message || String(err);
+        errors.push(`DeepSeek: ${errMsg}`);
+      }
+    }
+
+    if (!text && hasApiKey.openai) {
+      try {
+        text = await callOpenAI(prompt);
+        if (text) {
+          // 成功
+        }
+      } catch (err: any) {
+        const errMsg = err?.message || String(err);
+        errors.push(`OpenAI: ${errMsg}`);
+      }
+    }
+
+    if (!text && hasApiKey.gemini) {
+      try {
+        text = await callGemini(prompt);
+        if (text) {
+          // 成功
+        }
+      } catch (err: any) {
+        const errMsg = err?.message || String(err);
+        errors.push(`Gemini: ${errMsg}`);
       }
     }
 
     if (!text) {
+      // 检查是否有配置 API Key
+      const hasAnyKey = hasApiKey.deepseek || hasApiKey.openai || hasApiKey.gemini;
+      if (!hasAnyKey) {
+        return NextResponse.json(
+          {
+            error: "未配置任何 AI API Key",
+            detail: "请在 Vercel 项目设置中添加 DEEPSEEK_API_KEY、OPENAI_API_KEY 或 GEMINI_API_KEY 环境变量"
+          },
+          { status: 500 }
+        );
+      }
+
+      // 有配置但都失败了
       return NextResponse.json(
         {
           error: "所有配置的 LLM 提供商调用失败",
-          detail: String(lastError || "unknown")
+          detail: errors.length > 0 ? errors.join("; ") : "未知错误",
+          tips: "请检查：1) API Key 是否正确 2) API Key 是否有余额 3) 网络连接是否正常"
         },
         { status: 500 }
       );
