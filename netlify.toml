@@ -1,0 +1,13 @@
+# Netlify 配置文件
+# Next.js 14 App Router 自动配置
+
+[build]
+  command = "npm run build"
+  # Next.js 14 会自动处理输出目录，不需要手动指定 publish
+
+[build.environment]
+  NODE_VERSION = "18"
+
+# Netlify 会自动检测 Next.js 并安装 @netlify/plugin-nextjs
+# 这个插件会处理所有路由和 API Routes
+
